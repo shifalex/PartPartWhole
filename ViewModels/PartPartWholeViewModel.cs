@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using Sentry;
 
 namespace PartPartWhole.ViewModels
 {
@@ -104,7 +105,7 @@ namespace PartPartWhole.ViewModels
         [ICommand]
         public void GenerateExercise()
         {
-
+            SentrySdk.CaptureMessage("Hello Sentry");
             if (_decompositionLevel == 1) { MaxAddent = 10; MaxSum = 10; FInsisitentOnOne = true; }
             if (_decompositionLevel == 2) { MaxAddent = 20; MaxSum = 20; FInsisitentOnOne = false; }
             if (_decompositionLevel == 3) { MaxAddent = 100; MaxSum = 100; }
@@ -126,6 +127,7 @@ namespace PartPartWhole.ViewModels
                 while (factors[2] < factors[0] || (factors[2] - factors[0]) > _maxAddent || (factors[2] - factors[0]) < _minAddent)
                     factors[0] = r.Next(_minAddent, _maxAddent + 1);
             }
+            SentrySdk.CaptureMessage("First factors success");
 
             factors[1] = (factors[2] - factors[0]);
             if (_decompositionLevel > 0)
@@ -137,6 +139,9 @@ namespace PartPartWhole.ViewModels
                     factors[1] = (factors[2] - factors[0]);
                 }
             }
+
+            SentrySdk.CaptureMessage("Second factors success");
+
 
             int QuestionType;
             if (_fMustFindOneTwoBoth == 1) QuestionType = 1;
@@ -150,6 +155,7 @@ namespace PartPartWhole.ViewModels
                 for (int i = 0; i < 3; i++)
                     if (i != n) factors[i] = NAN;
 
+            SentrySdk.CaptureMessage("Xs success");
 
             _newFlag1 = (factors[0] == NAN);
             _newFlag2 = (factors[1] == NAN);
@@ -158,6 +164,9 @@ namespace PartPartWhole.ViewModels
             Addent1 = factors[0];
             Addent2 = factors[1];
             Sum = factors[2];
+
+
+            SentrySdk.CaptureMessage("Pulling the entries success");
 
         }
 
@@ -169,6 +178,7 @@ namespace PartPartWhole.ViewModels
             get
             {
 
+                SentrySdk.CaptureMessage("Getting true statement");
                 if (_addent1 == NAN || _addent2 == NAN || _sum == NAN) return "";
                 else if (_addent1 > _maxAddent || _addent1 < _minAddent || _addent2 > _maxAddent || _addent2 < _minAddent || _sum > _maxSum || _sum < -_minAddent) return "wrong input!";
                 else if (_sum == _addent1 + _addent2)
@@ -182,11 +192,13 @@ namespace PartPartWhole.ViewModels
                         DecompositionLevel++; StreakCorrect = 0;
                         if (_decompositionLevel > 3)
                         {
+
+                            SentrySdk.CaptureMessage("Win");
                             App.Current.MainPage.DisplayAlert("Win", "You Won!!", "OK");
                             return "YOU WON!!!!!!";
                         }
                     }
-
+                    SentrySdk.CaptureMessage("Correct");
                     return "CORRECT :D";
                 }
                 else
@@ -197,11 +209,15 @@ namespace PartPartWhole.ViewModels
                         DecompositionLevel--; StreakCorrect = 0; StreakWrong = 0;
                         if (_decompositionLevel == 0)
                         {
+                            SentrySdk.CaptureMessage("Incorrect");
+
                             App.Current.MainPage.DisplayAlert("Lose", "You Lost!!", "OK");
                             return "YOU LOST!!!!!!";
                         }
                     }
+                    SentrySdk.CaptureMessage("INCorrect");
                     return "WRONG :(";
+
                 }
             }
         }
