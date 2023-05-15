@@ -93,19 +93,19 @@
                 </Entry>
             </HorizontalStackLayout>
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="20" Padding="20">
-                <Button
+                <!--<Button
                 x:Name="CheckBtn"
                 Text="Check"
                     Clicked="OnCounterClicked"
-                HorizontalOptions="Center" IsEnabled="false" />
+                HorizontalOptions="Center" IsEnabled="false" />-->
                 <Button
                 Text="Next"
                 Command="{Binding GenerateExerciseCommand}"
                 HorizontalOptions="Center" />
             </HorizontalStackLayout>
             <Label Text="{Binding DecompositionLevel,StringFormat='Level: {0}'}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
-            <Label Text="{Binding StreakCorrect,StringFormat='Correct in a row: {0}'}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
-            <Label Text="{Binding StreakWrong,StringFormat='Wrong in a row: {0}'}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
+            <Label Text="{Binding StreakCorrect,StringFormat='Correct in this Level:{0} (reach 20 to level up)'}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
+            <Label Text="{Binding StreakWrong,StringFormat='Wrong in a row: {0} (reach 5 and you level down) '}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
             <!--<CollectionView>
                 <CollectionView.ItemsSource>
                     <x:Array Type="{x:Type model:PPWObject}"  >

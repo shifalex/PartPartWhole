@@ -9,32 +9,65 @@ namespace PartPartWhole.ViewModels
         private readonly int NAN = -1111;
 
         [ObservableProperty]
-        [AlsoNotifyChangeFor(nameof(TrueStatement))]
-        [AlsoNotifyChangeFor(nameof(Addent1Enabled))]
-        [AlsoNotifyChangeFor(nameof(Addent2Enabled))]
-        [AlsoNotifyChangeFor(nameof(SumEnabled))]
         [AlsoNotifyChangeFor(nameof(SAddent1))]
+        [AlsoNotifyChangeFor(nameof(Addent1Enabled))]
         private int _addent1;
 
         [ObservableProperty]
-        [AlsoNotifyChangeFor(nameof(TrueStatement))]
-        [AlsoNotifyChangeFor(nameof(Addent1Enabled))]
-        [AlsoNotifyChangeFor(nameof(Addent2Enabled))]
-        [AlsoNotifyChangeFor(nameof(SumEnabled))]
         [AlsoNotifyChangeFor(nameof(SAddent2))]
+        [AlsoNotifyChangeFor(nameof(Addent2Enabled))]
         private int _addent2;
 
         [ObservableProperty]
-        [AlsoNotifyChangeFor(nameof(TrueStatement))]
-        [AlsoNotifyChangeFor(nameof(Addent1Enabled))]
-        [AlsoNotifyChangeFor(nameof(Addent2Enabled))]
-        [AlsoNotifyChangeFor(nameof(SumEnabled))]
         [AlsoNotifyChangeFor(nameof(SSum))]
+        [AlsoNotifyChangeFor(nameof(SumEnabled))]
         private int _sum;
 
-        private bool _newFlag1 = true;
-        private bool _newFlag2 = true;
-        private bool _newFlagSum = true;
+        public bool SumEnabled { get { return (_sum == NAN); } }
+        public bool Addent1Enabled { get { return (_addent1 == NAN); } }
+        public bool Addent2Enabled { get {  return(_addent2 == NAN);  } }
+
+        public String SAddent1
+        {
+            get
+            {
+                if (_addent1 == NAN) return "";
+                return _addent1.ToString();
+            }
+            set
+            {
+                try { _addent1 = Int32.Parse(value); } catch { _addent1 = NAN; }
+                OnPropertyChanged(nameof(Addent1)); OnPropertyChanged(nameof(TrueStatement));
+            }
+        }
+        public String SAddent2
+        {
+            get
+            {
+                if (_addent2 == NAN) return "";
+                return _addent2.ToString();
+            }
+            set
+            {
+                try { _addent2 = Int32.Parse(value); } catch { _addent2 = NAN; }
+                OnPropertyChanged(nameof(Addent2)); OnPropertyChanged(nameof(TrueStatement));
+            }
+        }
+        public String SSum
+        {
+            get
+            {
+                if (_sum == NAN) return "";
+                return _sum.ToString();
+            }
+            set
+            {
+                try { _sum = Int32.Parse(value); } catch { _sum = NAN; }
+                OnPropertyChanged(nameof(Sum)); OnPropertyChanged(nameof(TrueStatement));
+            }
+        }
+
+
 
         //[ObservableProperty]
         //private List<PPWObject> _allHistory = new();
@@ -62,6 +95,7 @@ namespace PartPartWhole.ViewModels
 
         [ObservableProperty]
         private int _decompositionLevel = -1;
+        private int _oldlevel = 2;
         public bool IsDecomposition
         {
             get { return _decompositionLevel != -1; }
@@ -69,12 +103,13 @@ namespace PartPartWhole.ViewModels
             {
                 if (!value)
                 {
+                    _oldlevel = _decompositionLevel;
                     DecompositionLevel = -1;
                 }
                 else
                 {
                     if (_decompositionLevel == -1 || _decompositionLevel == 4)
-                        DecompositionLevel = 2;
+                        DecompositionLevel = _oldlevel;
                     FMustFindOneTwoBoth = 1;
                     FMustFindTheSum = false;
                     MaxAddent = 20;
@@ -89,6 +124,62 @@ namespace PartPartWhole.ViewModels
             }
         }
         public bool IsNotDecomposition { get { return !IsDecomposition; } }
+
+        //TODO:make a nice Enum
+        public String TrueStatement
+        {
+            get
+            {
+                SentrySdk.CaptureMessage("Getting true statement");
+                if (_addent1 == NAN || _addent2 == NAN || _sum == NAN) return "";
+                else if (_addent1 > _maxAddent || _addent1 < _minAddent || _addent2 > _maxAddent || _addent2 < _minAddent || _sum > _maxSum || _sum < _minAddent) return "wrong input!";
+                else if (_sum == _addent1 + _addent2)
+                {
+                    OnPropertyChanged(nameof(SumEnabled)); OnPropertyChanged(nameof(Addent1Enabled)); OnPropertyChanged(nameof(Addent2Enabled));
+                    /*_allHistory.Add(new(_addent1, _addent2, _sum));*/
+                                        
+                    if (_decompositionLevel > 0)
+                    {
+                        StreakCorrect++; StreakWrong = 0;
+                        if(StreakCorrect >= 20)
+                        {
+                            DecompositionLevel++; StreakCorrect = 0;
+                            if (_decompositionLevel > 3)
+                            {
+
+                                SentrySdk.CaptureMessage("Win");
+                                App.Current.MainPage.DisplayAlert("Win", "You Won!!", "OK");
+                                return "YOU WON!!!!!!";
+                            }
+                        }
+                    }
+                    SentrySdk.CaptureMessage("Correct");
+                    return "CORRECT :D";
+                }
+                else
+                {
+
+                    if (_decompositionLevel > 0)
+                    {
+                        StreakWrong++;
+                        if (StreakWrong > 5)
+                        {
+                            DecompositionLevel--; StreakCorrect = 0; StreakWrong = 0;
+                            if (_decompositionLevel == 0)
+                            {
+                                SentrySdk.CaptureMessage("Lose");
+
+                                App.Current.MainPage.DisplayAlert("Lose", "You Lost!!", "OK");
+                                return "YOU LOST!!!!!!";
+                            }
+                        }
+                    }
+                    SentrySdk.CaptureMessage("Incorrect");
+                    return "WRONG :(";
+                }
+            }
+        }
+
 
         [ICommand]
         public void Default()
@@ -112,54 +203,46 @@ namespace PartPartWhole.ViewModels
             //TODO: validation also in the form with Binding
             if (_maxSum > 2 * _maxAddent) _maxSum = 2 * _maxAddent;
 
-
+           
             int[] factors = new int[3];
             Random r = new();
-            factors[0] = r.Next(_minAddent, _maxAddent + 1);
             factors[2] = r.Next(2 * _minAddent, _maxSum + 1);
-            while (factors[2] < factors[0] || (factors[2] - factors[0]) > _maxAddent || (factors[2] - factors[0]) < _minAddent)
-                factors[2] = r.Next(0, _maxSum + 1);
+            if (_fInsisitentOnOne) factors[2] = _lastNum;
+            factors[0] = r.Next(_minAddent, Math.Min(_maxAddent, factors[2])+1);
+            factors[1] = factors[2] - factors[0];
 
-            //TODO: FIX make an entry near checkbox which will be enabled only when checked
-            if (_fInsisitentOnOne)
-            {
-                factors[2] = _lastNum;
-                while (factors[2] < factors[0] || (factors[2] - factors[0]) > _maxAddent || (factors[2] - factors[0]) < _minAddent)
-                    factors[0] = r.Next(_minAddent, _maxAddent + 1);
-            }
             SentrySdk.CaptureMessage("First factors success");
 
-            factors[1] = (factors[2] - factors[0]);
-            if (_decompositionLevel > 0)
+            
+            
+            if (_decompositionLevel > 1)
             {
-                while ((factors[2] % 10 > factors[0] % 10) || factors[2] < factors[0] || factors[1] > _maxAddent || factors[1] < _minAddent)
-                {
-                    factors[0] = r.Next(_minAddent, _maxAddent + 1);
-                    factors[2] = r.Next(2 * _minAddent, _maxSum + 1);
-                    factors[1] = (factors[2] - factors[0]);
+                if (_sum != _addent1 + _addent2) StreakWrong++;
+                factors[2] = r.Next(Math.Max(_minAddent, 10), _maxSum);
+                while (factors[2]%10==9) factors[2] = r.Next(Math.Max(_minAddent, 10), _maxSum);
+                if (factors[2] % 10 == 0) factors[0]= r.Next(_minAddent, Math.Min(_maxAddent+ 1, factors[2]) );
+                else { 
+                    int tens = r.Next(Math.Max(_minAddent / 10, 0), factors[2] / 10);
+                    int ones = r.Next(factors[2] % 10 + 1, 10);
+                    factors[0] = tens * 10 + ones;
                 }
+                factors[1] = factors[2] - factors[0];
             }
-
             SentrySdk.CaptureMessage("Second factors success");
 
 
-            int QuestionType;
-            if (_fMustFindOneTwoBoth == 1) QuestionType = 1;
-            else if (_fMustFindOneTwoBoth == 2) QuestionType = 2;
-            else QuestionType = r.Next(2);
+            int questionType;
+            if (_fMustFindOneTwoBoth == 1) questionType = 1;
+            else if (_fMustFindOneTwoBoth == 2) questionType = 2;
+            else questionType = r.Next(2);
             int n = r.Next(3);
             if (_fMustFindTheSum) n = 2;
-            if (QuestionType == 1)
+            if (questionType == 1)
                 factors[n] = NAN;
             else
                 for (int i = 0; i < 3; i++)
                     if (i != n) factors[i] = NAN;
-
             SentrySdk.CaptureMessage("Xs success");
-
-            _newFlag1 = (factors[0] == NAN);
-            _newFlag2 = (factors[1] == NAN);
-            _newFlagSum = (factors[2] == NAN);
 
             Addent1 = factors[0];
             Addent2 = factors[1];
@@ -169,113 +252,6 @@ namespace PartPartWhole.ViewModels
             SentrySdk.CaptureMessage("Pulling the entries success");
 
         }
-
-
-
-        //TODO:make a nice Enum
-        public String TrueStatement
-        {
-            get
-            {
-
-                SentrySdk.CaptureMessage("Getting true statement");
-                if (_addent1 == NAN || _addent2 == NAN || _sum == NAN) return "";
-                else if (_addent1 > _maxAddent || _addent1 < _minAddent || _addent2 > _maxAddent || _addent2 < _minAddent || _sum > _maxSum || _sum < -_minAddent) return "wrong input!";
-                else if (_sum == _addent1 + _addent2)
-                {
-                    _newFlagSum = false; _newFlag1 = false; _newFlag2 = false;
-                    /*_allHistory.Add(new(_addent1, _addent2, _sum))*/
-                    ;
-                    StreakCorrect++; StreakWrong = 0;
-                    if (_decompositionLevel > 0 && StreakCorrect >= 20)
-                    {
-                        DecompositionLevel++; StreakCorrect = 0;
-                        if (_decompositionLevel > 3)
-                        {
-
-                            SentrySdk.CaptureMessage("Win");
-                            App.Current.MainPage.DisplayAlert("Win", "You Won!!", "OK");
-                            return "YOU WON!!!!!!";
-                        }
-                    }
-                    SentrySdk.CaptureMessage("Correct");
-                    return "CORRECT :D";
-                }
-                else
-                {
-                    StreakWrong++;
-                    if (_decompositionLevel > 0 && StreakWrong > 8)
-                    {
-                        DecompositionLevel--; StreakCorrect = 0; StreakWrong = 0;
-                        if (_decompositionLevel == 0)
-                        {
-                            SentrySdk.CaptureMessage("Incorrect");
-
-                            App.Current.MainPage.DisplayAlert("Lose", "You Lost!!", "OK");
-                            return "YOU LOST!!!!!!";
-                        }
-                    }
-                    SentrySdk.CaptureMessage("INCorrect");
-                    return "WRONG :(";
-
-                }
-            }
-        }
-
-        public String SAddent1
-        {
-            get
-            {
-                if (_addent1 == NAN) return "";
-                return _addent1.ToString();
-            }
-            set
-            {
-                try { Addent1 = Int32.Parse(value); OnPropertyChanged("_addent1"); } catch { _addent1 = NAN; }
-            }
-        }
-
-        public String SAddent2
-        {
-            get
-            {
-                if (_addent2 == NAN) return "";
-                return _addent2.ToString();
-            }
-            set
-            {
-                try { Addent2 = Int32.Parse(value); OnPropertyChanged("_addent2"); } catch { _addent2 = NAN; }
-            }
-        }
-        public String SSum
-        {
-            get
-            {
-                if (_sum == NAN) return "";
-                return _sum.ToString();
-            }
-            set
-            {
-                try { Sum = Int32.Parse(value); OnPropertyChanged("_sum"); } catch { _sum = NAN; }
-            }
-        }
-
-
-        public bool SumEnabled
-        {
-            get { return _newFlagSum; }
-        }
-
-        public bool Addent1Enabled
-        {
-            get { return _newFlag1; }
-        }
-
-        public bool Addent2Enabled
-        {
-            get { return _newFlag2; }
-        }
-
 
     }
 }
