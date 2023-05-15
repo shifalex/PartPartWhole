@@ -1,6 +1,4 @@
-﻿using PartPartWhole.ViewModels;
-
-namespace PartPartWhole;
+﻿namespace PartPartWhole;
 
 public partial class MainPage : ContentPage
 {
@@ -27,7 +25,7 @@ public partial class MainPage : ContentPage
 
     private void addent2_TextChanged(object sender, TextChangedEventArgs e)
     {
-        
+
     }
 }
 

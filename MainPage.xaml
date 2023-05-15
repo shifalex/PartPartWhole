@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="PartPartWhole.MainPage">
+             x:Class="PartPartWhole.MainPage"
+             xmlns:model="clr-namespace:PartPartWhole.Models">
     
 
     <ContentPage.Resources>
@@ -95,18 +96,51 @@
                 <Button
                 x:Name="CheckBtn"
                 Text="Check"
-                SemanticProperties.Hint="Counts the number of times you click on me"
                     Clicked="OnCounterClicked"
                 HorizontalOptions="Center" IsEnabled="false" />
                 <Button
-                x:Name="NewBtn"
                 Text="Next"
-                SemanticProperties.Hint="Counts the number of times you click on me"
                 Command="{Binding GenerateExerciseCommand}"
                 HorizontalOptions="Center" />
             </HorizontalStackLayout>
+            <Label Text="{Binding DecompositionLevel,StringFormat='Level: {0}'}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
+            <Label Text="{Binding StreakCorrect,StringFormat='Correct in a row: {0}'}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
+            <Label Text="{Binding StreakWrong,StringFormat='Wrong in a row: {0}'}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
+            <!--<CollectionView>
+                <CollectionView.ItemsSource>
+                    <x:Array Type="{x:Type model:PPWObject}"  >
+                        <model:PPWObject
+                    Sum="5"
+                    Addent1="2"
+                    Addent2="3" />
+                        <model:PPWObject
+                    Sum="6"
+                    Addent1="4"
+                    Addent2="2" />
+                    </x:Array>
+                </CollectionView.ItemsSource>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:PPWObject">
+                        <Label VerticalOptions="Center">
+                            <Label.Text>
+                                <MultiBinding StringFormat="Whole: {0}   Part1: {1}  Part2: {2}">
+                                    <Binding Path="Sum" />
+                                    <Binding Path="Addent1" />
+                                    <Binding Path="Addent2" />
+                                </MultiBinding>
+                            </Label.Text>
+                        </Label>
 
-            <Picker Title="Number of unkowns" SelectedIndex="{Binding FMustFindOneTwoBoth}">
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>-->
+            <HorizontalStackLayout>
+                    <CheckBox IsChecked="{Binding IsDecomposition}" VerticalOptions="Center"/>
+                    <Label Text="Decomposition Game" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout>
+                <Label Text="Number of unkowns" VerticalOptions="Center"/>
+                <Picker Title="Number of unkowns" SelectedIndex="{Binding FMustFindOneTwoBoth}" IsEnabled="{Binding IsNotDecomposition}">
                 <Picker.Items>
                     <x:String>All Options</x:String>
                     <x:String>Must be one</x:String>
@@ -114,10 +148,11 @@
                     
                 </Picker.Items>
             </Picker>
+        </HorizontalStackLayout>
             <HorizontalStackLayout VerticalOptions="Center" Padding="0">
                 <Label Text="Addent:  " VerticalOptions="Center"/>
                 <Label Text="Min" VerticalOptions="Center"/>
-                <Entry Keyboard="Numeric"    Text="{Binding MinAddent}" 
+                <Entry Keyboard="Numeric"    Text="{Binding MinAddent}" IsEnabled="{Binding IsNotDecomposition}"
                        FontSize="14"
                        WidthRequest="40">
                     <Entry.Behaviors>
@@ -129,7 +164,7 @@
                     </Entry.Behaviors>
                 </Entry>
                 <Label Text="Max" VerticalOptions="Center"/>
-                <Entry Keyboard="Numeric"    Text="{Binding MaxAddent}" 
+                <Entry Keyboard="Numeric"    Text="{Binding MaxAddent}" IsEnabled="{Binding IsNotDecomposition}"
                        FontSize="14"
                        WidthRequest="80"
                        VerticalOptions="Start">
@@ -144,8 +179,8 @@
             </HorizontalStackLayout>
             <HorizontalStackLayout>
                 
-            <Label Text="Sum:       " VerticalOptions="Center" Padding="0"/><Label Text="Max" VerticalOptions="Center"/>
-                <Entry Keyboard="Numeric"    Text="{Binding MaxSum}" 
+                <Label Text="Sum:       " VerticalOptions="Center" Padding="0"/><Label Text="Max" VerticalOptions="Center"/>
+                <Entry Keyboard="Numeric"    Text="{Binding MaxSum}" IsEnabled="{Binding IsNotDecomposition}"
                        FontSize="14"
                        WidthRequest="80">
                     <Entry.Behaviors>
@@ -158,14 +193,16 @@
                 </Entry>
             </HorizontalStackLayout>
             <HorizontalStackLayout>
-            <CheckBox IsChecked="{Binding FMustFindTheSum}" VerticalOptions="Center"/>
+                <CheckBox IsChecked="{Binding FMustFindTheSum}" VerticalOptions="Center" IsEnabled="{Binding IsNotDecomposition}"/>
             <Label Text="Must Work only with Sum" VerticalOptions="Center"/>
 </HorizontalStackLayout>
             <HorizontalStackLayout>
-                <CheckBox IsChecked="{Binding FInsisitentOnOne}" VerticalOptions="Center"/>
+                <CheckBox IsChecked="{Binding FInsisitentOnOne}" VerticalOptions="Center" IsEnabled="{Binding IsNotDecomposition}"/>
                 <Label Text="Insist On the same number" VerticalOptions="Center"/>
             </HorizontalStackLayout>
-
+            <Button
+                Text="Default settings" HorizontalOptions="Center"
+                Command="{Binding DefaultCommand}" IsEnabled="{Binding IsNotDecomposition}"/>
 
         </VerticalStackLayout>
     </ScrollView>
