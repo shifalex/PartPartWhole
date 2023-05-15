@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="PartPartWhole.MainPage">
+    
+
+    <ContentPage.Resources>
+        <Style x:Key="InvalidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="Red" />
+        </Style>
+        <Style x:Key="ValidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="Green" />
+        </Style>
+    </ContentPage.Resources>
+
+    
+    <ScrollView VerticalOptions="Start">
+        <VerticalStackLayout
+            Spacing="5"
+            Padding="20,15"
+            VerticalOptions="Start">
+
+            <!--<Image
+                Source="dotnet_bot.png"
+                SemanticProperties.Description="Cute dot net bot waving hi to you!"
+                HeightRequest="200"
+                HorizontalOptions="Center" />-->
+
+            <Label
+                Text="{Binding TrueStatement}"
+                FontSize="18"
+                     WidthRequest="250"/>
+
+
+            <Entry Keyboard="Numeric"  Text="{Binding SSum}" IsEnabled="{Binding SumEnabled}"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="32"
+                HorizontalOptions="Center"
+                BackgroundColor="Yellow"
+                WidthRequest="240">
+                <Entry.Behaviors>
+                    <toolkit:NumericValidationBehavior 
+                InvalidStyle="{StaticResource InvalidEntryStyle}"
+                ValidStyle="{StaticResource ValidEntryStyle}"
+                Flags="ValidateOnValueChanged"
+                MinimumValue="{Binding MinASum}"
+                MaximumValue="{Binding MaxSum}"
+                MaximumDecimalPlaces="0" />
+                </Entry.Behaviors>
+            </Entry>
+
+            <HorizontalStackLayout
+            Spacing="5"
+            Padding="0"
+            HorizontalOptions="Center"
+            >
+
+                <Entry Keyboard="Numeric"  Text="{Binding SAddent1}" IsEnabled="{Binding Addent1Enabled}"
+                FontSize="18"
+                    BackgroundColor="Lavender"
+                     WidthRequest="120"
+                      >
+                    <Entry.Behaviors>
+                        <toolkit:NumericValidationBehavior 
+                InvalidStyle="{StaticResource InvalidEntryStyle}"
+                ValidStyle="{StaticResource ValidEntryStyle}"
+                Flags="ValidateOnValueChanged"
+                MinimumValue="{Binding MinAddent}"
+                MaximumValue="{Binding MaxAddent}"
+                MaximumDecimalPlaces="0" />
+                    </Entry.Behaviors>
+                </Entry>
+
+                <!-- <Label
+                Text="Welcome to .NET Multi-platform App UI2"
+                SemanticProperties.Description="Welcome to dot net Multi platform App U I 2"
+                FontSize="18" />-->
+                <Entry Keyboard="Numeric"    Text="{Binding SAddent2}" IsEnabled="{Binding Addent2Enabled}"
+                       FontSize="18"
+                    BackgroundColor="Lavender"
+                       WidthRequest="120">
+                    <Entry.Behaviors>
+                        <toolkit:NumericValidationBehavior 
+                InvalidStyle="{StaticResource InvalidEntryStyle}"
+                ValidStyle="{StaticResource ValidEntryStyle}"
+                Flags="ValidateOnValueChanged"
+                MinimumValue="{Binding MinAddent}"
+                MaximumValue="{Binding MaxAddent}"
+                MaximumDecimalPlaces="0" />
+                    </Entry.Behaviors>
+                </Entry>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20" Padding="20">
+                <Button
+                x:Name="CheckBtn"
+                Text="Check"
+                SemanticProperties.Hint="Counts the number of times you click on me"
+                    Clicked="OnCounterClicked"
+                HorizontalOptions="Center" IsEnabled="false" />
+                <Button
+                x:Name="NewBtn"
+                Text="Next"
+                SemanticProperties.Hint="Counts the number of times you click on me"
+                Command="{Binding GenerateExerciseCommand}"
+                HorizontalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <Picker Title="Number of unkowns" SelectedIndex="{Binding FMustFindOneTwoBoth}">
+                <Picker.Items>
+                    <x:String>All Options</x:String>
+                    <x:String>Must be one</x:String>
+                    <x:String>Must be two</x:String>
+                    
+                </Picker.Items>
+            </Picker>
+            <HorizontalStackLayout VerticalOptions="Center" Padding="0">
+                <Label Text="Addent:  " VerticalOptions="Center"/>
+                <Label Text="Min" VerticalOptions="Center"/>
+                <Entry Keyboard="Numeric"    Text="{Binding MinAddent}" 
+                       FontSize="14"
+                       WidthRequest="40">
+                    <Entry.Behaviors>
+                        <toolkit:NumericValidationBehavior 
+                InvalidStyle="{StaticResource InvalidEntryStyle}"
+                ValidStyle="{StaticResource ValidEntryStyle}"
+                Flags="ValidateOnValueChanged"
+                MaximumDecimalPlaces="0" />
+                    </Entry.Behaviors>
+                </Entry>
+                <Label Text="Max" VerticalOptions="Center"/>
+                <Entry Keyboard="Numeric"    Text="{Binding MaxAddent}" 
+                       FontSize="14"
+                       WidthRequest="80"
+                       VerticalOptions="Start">
+                    <Entry.Behaviors>
+                        <toolkit:NumericValidationBehavior 
+                InvalidStyle="{StaticResource InvalidEntryStyle}"
+                ValidStyle="{StaticResource ValidEntryStyle}"
+                Flags="ValidateOnValueChanged"
+                MaximumDecimalPlaces="0" />
+                    </Entry.Behaviors>
+                </Entry>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout>
+                
+            <Label Text="Sum:       " VerticalOptions="Center" Padding="0"/><Label Text="Max" VerticalOptions="Center"/>
+                <Entry Keyboard="Numeric"    Text="{Binding MaxSum}" 
+                       FontSize="14"
+                       WidthRequest="80">
+                    <Entry.Behaviors>
+                        <toolkit:NumericValidationBehavior 
+                InvalidStyle="{StaticResource InvalidEntryStyle}"
+                ValidStyle="{StaticResource ValidEntryStyle}"
+                Flags="ValidateOnValueChanged"
+                MaximumDecimalPlaces="0" />
+                    </Entry.Behaviors>
+                </Entry>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout>
+            <CheckBox IsChecked="{Binding FMustFindTheSum}" VerticalOptions="Center"/>
+            <Label Text="Must Work only with Sum" VerticalOptions="Center"/>
+</HorizontalStackLayout>
+            <HorizontalStackLayout>
+                <CheckBox IsChecked="{Binding FInsisitentOnOne}" VerticalOptions="Center"/>
+                <Label Text="Insist On the same number" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
