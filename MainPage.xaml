@@ -34,7 +34,9 @@
                      WidthRequest="250"/>
 
 
-            <Entry Keyboard="Numeric"  Text="{Binding SSum}" IsEnabled="{Binding SumEnabled}"
+            <Entry Keyboard="Numeric"  Text="{Binding SSum}" IsEnabled="{Binding SumEnabled}"    
+                   toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference txtAddent1}" x:Name="txtSum"
+
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="32"
                 HorizontalOptions="Center"
@@ -58,26 +60,24 @@
             >
 
                 <Entry Keyboard="Numeric"  Text="{Binding SAddent1}" IsEnabled="{Binding Addent1Enabled}"
-                FontSize="18"
+                    toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference txtAddent2}" x:Name="txtAddent1"
+                    FontSize="18"
                     BackgroundColor="Lavender"
-                     WidthRequest="120"
-                      >
+                    WidthRequest="120" >
                     <Entry.Behaviors>
                         <toolkit:NumericValidationBehavior 
-                InvalidStyle="{StaticResource InvalidEntryStyle}"
-                ValidStyle="{StaticResource ValidEntryStyle}"
-                Flags="ValidateOnValueChanged"
-                MinimumValue="{Binding MinAddent}"
-                MaximumValue="{Binding MaxAddent}"
-                MaximumDecimalPlaces="0" />
+                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                            ValidStyle="{StaticResource ValidEntryStyle}"
+                            Flags="ValidateOnValueChanged"
+                            MinimumValue="{Binding MinAddent}"
+                            MaximumValue="{Binding MaxAddent}"
+                            MaximumDecimalPlaces="0" />
                     </Entry.Behaviors>
                 </Entry>
 
-                <!-- <Label
-                Text="Welcome to .NET Multi-platform App UI2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I 2"
-                FontSize="18" />-->
                 <Entry Keyboard="Numeric"    Text="{Binding SAddent2}" IsEnabled="{Binding Addent2Enabled}"
+                toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference txtSum}" x:Name="txtAddent2"
+
                        FontSize="18"
                     BackgroundColor="Lavender"
                        WidthRequest="120">
@@ -102,7 +102,9 @@
                 Text="Next"
                 Command="{Binding GenerateExerciseCommand}"
                 HorizontalOptions="Center" />
+                
             </HorizontalStackLayout>
+            <Label Text="{Binding History}" HorizontalOptions="Center"/>
             <Label Text="{Binding DecompositionLevel,StringFormat='Level: {0}'}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
             <Label Text="{Binding StreakCorrect,StringFormat='Correct in this Level:{0} (reach 20 to level up)'}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
             <Label Text="{Binding StreakWrong,StringFormat='Wrong in a row: {0} (reach 5 and you level down) '}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>

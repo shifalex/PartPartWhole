@@ -1,6 +1,6 @@
 ﻿namespace PartPartWhole.Models
 {
-    class PPWObject
+    public class PPWObject
     {
         public PPWObject(int addent1, int addent2, int sum)
         {

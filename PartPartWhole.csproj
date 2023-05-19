@@ -70,6 +70,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
 		<PackageReference Include="Sentry.Maui" Version="3.31.0" />
+		<PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
 	</ItemGroup>
 
 </Project>

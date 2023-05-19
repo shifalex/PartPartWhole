@@ -17,5 +17,10 @@ public partial class MainPage : ContentPage
     {
 
     }
+
+    private void OnLoad(object sender, EventArgs e)
+    {
+
+    }
 }
 
