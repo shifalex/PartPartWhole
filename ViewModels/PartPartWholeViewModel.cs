@@ -92,9 +92,14 @@ namespace PartPartWhole.ViewModels
         [ObservableProperty]
         private bool _fInsisitentOnOne = false;
         private int _lastNum = 10;
-        
+
+        [ObservableProperty]
+        public bool _settingsVisible = true;
         [ObservableProperty]
         private bool _requireNewAddents = true;
+        //TODO: do it more elegant code with only one propety(without _settingsVisible)
+        public bool RequireNewAddents2 { get { return _requireNewAddents; } set { this.Default(); _requireNewAddents = value; IsDecomposition = false; SettingsVisible = !value;  } } 
+
         private bool _freeCombination = false;
         private List<PPWObject> _allHistory = new();
         private List<int> _impossibleSums = new();
@@ -121,6 +126,7 @@ namespace PartPartWhole.ViewModels
                 {
                     if (_decompositionLevel == -1 || _decompositionLevel == 4)
                         DecompositionLevel = _oldlevel;
+                    if (_decompositionLevel == -1) DecompositionLevel = 2;
                     FMustFindOneTwoBoth = 1;
                     FMustFindTheSum = false;
                     MaxAddent = 20;
@@ -130,7 +136,7 @@ namespace PartPartWhole.ViewModels
 
                 }
 
-                OnPropertyChanged();
+                //OnPropertyChanged();
                 OnPropertyChanged(nameof(IsNotDecomposition));
             }
         }

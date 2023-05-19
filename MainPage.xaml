@@ -105,9 +105,6 @@
                 
             </HorizontalStackLayout>
             <Label Text="{Binding History}" HorizontalOptions="Center"/>
-            <Label Text="{Binding DecompositionLevel,StringFormat='Level: {0}'}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
-            <Label Text="{Binding StreakCorrect,StringFormat='Correct in this Level:{0} (reach 20 to level up)'}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
-            <Label Text="{Binding StreakWrong,StringFormat='Wrong in a row: {0} (reach 5 and you level down) '}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
             <!--<CollectionView>
                 <CollectionView.ItemsSource>
                     <x:Array Type="{x:Type model:PPWObject}"  >
@@ -136,76 +133,93 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>-->
-            <HorizontalStackLayout>
+            <Label Text="{Binding DecompositionLevel,StringFormat='Level: {0}'}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
+            <Label Text="{Binding StreakCorrect,StringFormat='Correct in this Level:{0} (reach 20 to level up)'}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
+            <Label Text="{Binding StreakWrong,StringFormat='Wrong in a row: {0} (reach 5 and you level down) '}" VerticalOptions="Center" IsVisible="{Binding IsDecomposition}"/>
+
+            <HorizontalStackLayout IsVisible="{Binding IsNotDecomposition}">
+
+                <CheckBox IsChecked="{Binding RequireNewAddents2}" VerticalOptions="Center"/>
+                <VerticalStackLayout>
+                <Label Text="Only new combinations" VerticalOptions="Center"/>
+                <Label Text="Only numbers from 0 to 5" VerticalOptions="Center"/>
+</VerticalStackLayout>
+            </HorizontalStackLayout>
+            <VerticalStackLayout IsVisible="{Binding SettingsVisible}">
+
+                <HorizontalStackLayout>
                     <CheckBox IsChecked="{Binding IsDecomposition}" VerticalOptions="Center"/>
                     <Label Text="Decomposition Game" VerticalOptions="Center"/>
-            </HorizontalStackLayout>
-            <HorizontalStackLayout>
-                <Label Text="Number of unkowns" VerticalOptions="Center"/>
-                <Picker Title="Number of unkowns" SelectedIndex="{Binding FMustFindOneTwoBoth}" IsEnabled="{Binding IsNotDecomposition}">
-                <Picker.Items>
-                    <x:String>All Options</x:String>
-                    <x:String>Must be one</x:String>
-                    <x:String>Must be two</x:String>
-                    
-                </Picker.Items>
-            </Picker>
-        </HorizontalStackLayout>
-            <HorizontalStackLayout VerticalOptions="Center" Padding="0">
-                <Label Text="Addent:  " VerticalOptions="Center"/>
-                <Label Text="Min" VerticalOptions="Center"/>
-                <Entry Keyboard="Numeric"    Text="{Binding MinAddent}" IsEnabled="{Binding IsNotDecomposition}"
+                </HorizontalStackLayout>
+                <HorizontalStackLayout>
+                    <Label Text="Number of unkowns" VerticalOptions="Center"/>
+                    <Picker Title="Number of unkowns" SelectedIndex="{Binding FMustFindOneTwoBoth}" IsEnabled="{Binding IsNotDecomposition}">
+                        <Picker.Items>
+                            <x:String>All Options</x:String>
+                            <x:String>Must be one</x:String>
+                            <x:String>Must be two</x:String>
+
+                        </Picker.Items>
+                    </Picker>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout VerticalOptions="Center" Padding="0">
+                    <Label Text="Addent:  " VerticalOptions="Center"/>
+                    <Label Text="Min" VerticalOptions="Center"/>
+                    <Entry Keyboard="Numeric"    Text="{Binding MinAddent}" IsEnabled="{Binding IsNotDecomposition}"
                        FontSize="14"
                        WidthRequest="40">
-                    <Entry.Behaviors>
-                        <toolkit:NumericValidationBehavior 
+                        <Entry.Behaviors>
+                            <toolkit:NumericValidationBehavior 
                 InvalidStyle="{StaticResource InvalidEntryStyle}"
                 ValidStyle="{StaticResource ValidEntryStyle}"
                 Flags="ValidateOnValueChanged"
                 MaximumDecimalPlaces="0" />
-                    </Entry.Behaviors>
-                </Entry>
-                <Label Text="Max" VerticalOptions="Center"/>
-                <Entry Keyboard="Numeric"    Text="{Binding MaxAddent}" IsEnabled="{Binding IsNotDecomposition}"
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Label Text="Max" VerticalOptions="Center"/>
+                    <Entry Keyboard="Numeric"    Text="{Binding MaxAddent}" IsEnabled="{Binding IsNotDecomposition}"
                        FontSize="14"
                        WidthRequest="80"
                        VerticalOptions="Start">
-                    <Entry.Behaviors>
-                        <toolkit:NumericValidationBehavior 
+                        <Entry.Behaviors>
+                            <toolkit:NumericValidationBehavior 
                 InvalidStyle="{StaticResource InvalidEntryStyle}"
                 ValidStyle="{StaticResource ValidEntryStyle}"
                 Flags="ValidateOnValueChanged"
                 MaximumDecimalPlaces="0" />
-                    </Entry.Behaviors>
-                </Entry>
-            </HorizontalStackLayout>
-            <HorizontalStackLayout>
-                
-                <Label Text="Sum:       " VerticalOptions="Center" Padding="0"/><Label Text="Max" VerticalOptions="Center"/>
-                <Entry Keyboard="Numeric"    Text="{Binding MaxSum}" IsEnabled="{Binding IsNotDecomposition}"
+                        </Entry.Behaviors>
+                    </Entry>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout>
+
+                    <Label Text="Sum:       " VerticalOptions="Center" Padding="0"/>
+                    <Label Text="Max" VerticalOptions="Center"/>
+                    <Entry Keyboard="Numeric"    Text="{Binding MaxSum}" IsEnabled="{Binding IsNotDecomposition}"
                        FontSize="14"
                        WidthRequest="80">
-                    <Entry.Behaviors>
-                        <toolkit:NumericValidationBehavior 
+                        <Entry.Behaviors>
+                            <toolkit:NumericValidationBehavior 
                 InvalidStyle="{StaticResource InvalidEntryStyle}"
                 ValidStyle="{StaticResource ValidEntryStyle}"
                 Flags="ValidateOnValueChanged"
                 MaximumDecimalPlaces="0" />
-                    </Entry.Behaviors>
-                </Entry>
-            </HorizontalStackLayout>
-            <HorizontalStackLayout>
-                <CheckBox IsChecked="{Binding FMustFindTheSum}" VerticalOptions="Center" IsEnabled="{Binding IsNotDecomposition}"/>
-            <Label Text="Must Work only with Sum" VerticalOptions="Center"/>
-</HorizontalStackLayout>
-            <HorizontalStackLayout>
-                <CheckBox IsChecked="{Binding FInsisitentOnOne}" VerticalOptions="Center" IsEnabled="{Binding IsNotDecomposition}"/>
-                <Label Text="Insist On the same number" VerticalOptions="Center"/>
-            </HorizontalStackLayout>
-            <Button
+                        </Entry.Behaviors>
+                    </Entry>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout>
+                    <CheckBox IsChecked="{Binding FMustFindTheSum}" VerticalOptions="Center" IsEnabled="{Binding IsNotDecomposition}"/>
+                    <Label Text="Must Work only with Sum" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout>
+                    <CheckBox IsChecked="{Binding FInsisitentOnOne}" VerticalOptions="Center" IsEnabled="{Binding IsNotDecomposition}"/>
+                    <Label Text="Insist On the same number" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <Button
                 Text="Default settings" HorizontalOptions="Center"
                 Command="{Binding DefaultCommand}" IsEnabled="{Binding IsNotDecomposition}"/>
-
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
 
